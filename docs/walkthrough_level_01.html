@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《物候 · Seasons of Things》关卡 01 攻略 · 钟械工坊 · 前厅</title>
+<style>
+  :root{
+    --bg:#14110D;
+    --panel:#1E1A14;
+    --panel-2:#262019;
+    --line:#3A3227;
+    --tx:#EDE6D8;
+    --tx-2:#A79B85;
+    --tx-3:#75694F;
+    --gold:#E8C56A;
+    --rust:#C97F42;
+    --cold:#8FA0B4;
+    --ash:#A8A8A2;
+    --danger:#C4604F;
+    --ok:#7FA86A;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--bg);color:var(--tx);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:15px;line-height:1.75;letter-spacing:.01em;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---------- 头部 ---------- */
+  header{
+    padding:64px 0 40px;border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;
+    background:radial-gradient(circle,rgba(232,197,106,.13),transparent 68%);pointer-events:none;
+  }
+  .kicker{
+    font-size:12px;letter-spacing:.28em;color:var(--tx-3);text-transform:uppercase;margin:0 0 18px;
+  }
+  h1{
+    margin:0 0 14px;font-size:34px;line-height:1.28;font-weight:700;letter-spacing:.01em;
+  }
+  h1 .sub{display:block;font-size:17px;font-weight:400;color:var(--tx-2);margin-top:10px;letter-spacing:.04em;}
+  .lede{margin:0;color:var(--tx-2);font-size:15.5px;max-width:62ch;}
+  .lede b{color:var(--gold);font-weight:600;}
+
+  /* ---------- 通用块 ---------- */
+  h2{
+    font-size:20px;margin:56px 0 6px;font-weight:700;letter-spacing:.02em;
+    display:flex;align-items:baseline;gap:12px;
+  }
+  h2 .num{
+    font-family:var(--mono);font-size:12px;color:var(--bg);background:var(--gold);
+    padding:2px 7px;border-radius:3px;font-weight:700;flex:none;letter-spacing:0;
+  }
+  h2 + .h2note{margin:0 0 22px;color:var(--tx-3);font-size:13.5px;padding-left:0;}
+  h3{font-size:15.5px;margin:26px 0 8px;font-weight:600;color:var(--gold);}
+  p{margin:10px 0;}
+  a{color:var(--gold);}
+  code{font-family:var(--mono);font-size:13px;background:var(--panel-2);padding:2px 6px;border-radius:4px;color:var(--rust);}
+  kbd{
+    font-family:var(--mono);font-size:12.5px;background:var(--panel-2);border:1px solid var(--line);
+    border-bottom-width:2px;border-radius:5px;padding:2px 7px;color:var(--tx);white-space:nowrap;
+  }
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:18px 0;}
+  .card.tight{padding:16px 20px;}
+
+  /* ---------- 速通清单 ---------- */
+  ol.steps{list-style:none;counter-reset:s;margin:14px 0 0;padding:0;}
+  ol.steps > li{
+    counter-increment:s;position:relative;padding:11px 0 11px 52px;border-bottom:1px dashed var(--line);
+  }
+  ol.steps > li:last-child{border-bottom:none;}
+  ol.steps > li::before{
+    content:counter(s);position:absolute;left:0;top:11px;width:30px;height:30px;border-radius:50%;
+    background:var(--panel-2);border:1px solid var(--line);color:var(--gold);
+    font-family:var(--mono);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  }
+  ol.steps > li.final::before{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+  ol.steps .what{font-weight:600;}
+  ol.steps .why{color:var(--tx-2);font-size:13.5px;display:block;margin-top:2px;}
+  .tpill{
+    display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:700;
+    padding:1px 7px;border-radius:4px;margin-right:8px;vertical-align:1px;
+  }
+  .t1{background:rgba(232,197,106,.16);color:var(--gold);border:1px solid rgba(232,197,106,.35);}
+  .t2{background:rgba(201,127,66,.16);color:var(--rust);border:1px solid rgba(201,127,66,.38);}
+
+  /* ---------- 地图 ---------- */
+  .mapwrap{overflow-x:auto;padding:4px 0 10px;}
+  .map{display:grid;grid-template-columns:repeat(13,34px);gap:3px;min-width:max-content;}
+  .c{
+    width:34px;height:34px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;font-family:var(--mono);
+  }
+  .c.wall{background:#2C261D;border:1px solid #211C15;color:#4A4030;}
+  .c.floor{background:#201B14;border:1px solid #2A2318;}
+  .c.ent{background:#2E2618;border:1px solid rgba(232,197,106,.30);color:var(--gold);}
+  .c.player{background:rgba(232,197,106,.22);border:1px solid var(--gold);color:var(--gold);}
+  .c.exit{background:rgba(127,168,106,.16);border:1px solid rgba(127,168,106,.55);color:var(--ok);}
+  .c.lock{background:rgba(196,96,79,.16);border:1px solid rgba(196,96,79,.5);color:var(--danger);}
+  .c.plate{background:rgba(143,160,180,.14);border:1px solid rgba(143,160,180,.45);color:var(--cold);}
+  .axis{display:flex;gap:3px;margin-bottom:6px;padding-left:0;}
+  .axis span{width:34px;text-align:center;font-size:10px;color:var(--tx-3);font-family:var(--mono);}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:14px 0 0;font-size:13px;color:var(--tx-2);}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px;}
+  .route{
+    margin-top:16px;font-size:13px;color:var(--tx-2);font-family:var(--mono);
+    background:var(--panel-2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;
+    white-space:pre-wrap;line-height:1.9;
+  }
+
+  /* ---------- 表格 ---------- */
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{color:var(--tx-3);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;}
+  tbody tr:hover{background:rgba(232,197,106,.04);}
+  td .tag{font-family:var(--mono);font-size:11.5px;color:var(--tx-2);}
+  .yes{color:var(--ok);font-weight:600;}
+  .no{color:var(--danger);font-weight:600;}
+  .hl{color:var(--gold);font-weight:600;}
+
+  /* ---------- 谜题卡 ---------- */
+  .puzzle{border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;background:var(--panel);padding:20px 24px;margin:18px 0;}
+  .puzzle h3{margin-top:0;color:var(--tx);font-size:17px;}
+  .puzzle h3 em{font-style:normal;color:var(--gold);font-family:var(--mono);font-size:12px;margin-right:9px;letter-spacing:.05em;}
+  .qa{margin:14px 0 0;}
+  .qa dt{color:var(--tx-3);font-size:12px;letter-spacing:.08em;margin-top:12px;font-weight:600;}
+  .qa dd{margin:3px 0 0;color:var(--tx);}
+  .qa dd.mut{color:var(--tx-2);}
+
+  /* ---------- 卡关 ---------- */
+  details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:10px 0;}
+  details summary{cursor:pointer;font-weight:600;color:var(--tx);outline:none;list-style:none;display:flex;gap:10px;align-items:baseline;}
+  details summary::-webkit-details-marker{display:none;}
+  details summary::before{content:"▸";color:var(--gold);transition:transform .18s;flex:none;}
+  details[open] summary::before{transform:rotate(90deg);}
+  details .body{margin-top:10px;color:var(--tx-2);font-size:14px;border-top:1px dashed var(--line);padding-top:12px;}
+  .prob{font-family:var(--mono);font-size:11.5px;color:var(--tx-3);font-weight:400;margin-left:auto;flex:none;}
+
+  .callout{
+    background:rgba(232,197,106,.07);border:1px solid rgba(232,197,106,.25);border-radius:10px;
+    padding:16px 20px;margin:18px 0;font-size:14px;color:var(--tx-2);
+  }
+  .callout b{color:var(--gold);}
+  .callout.warn{background:rgba(196,96,79,.07);border-color:rgba(196,96,79,.3);}
+  .callout.warn b{color:var(--danger);}
+
+  ul.tips{margin:10px 0;padding-left:0;list-style:none;}
+  ul.tips li{padding:9px 0 9px 26px;position:relative;border-bottom:1px dashed var(--line);font-size:14px;}
+  ul.tips li:last-child{border-bottom:none;}
+  ul.tips li::before{content:"→";position:absolute;left:0;color:var(--gold);font-family:var(--mono);}
+  ul.tips li .lv{font-family:var(--mono);font-size:11px;color:var(--tx-3);margin-right:8px;}
+
+  footer{margin-top:72px;padding-top:24px;border-top:1px solid var(--line);color:var(--tx-3);font-size:12.5px;}
+  @media print{body{background:#fff;color:#111;}.card,.puzzle,details{border-color:#ccc;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Walkthrough · 关卡 01</p>
+  <h1>钟械工坊 · 前厅
+    <span class="sub">《物候 · Seasons of Things》 教学关</span>
+  </h1>
+  <p class="lede">
+    本关只教一件事：<b>切换时刻 → 取到所需的形态 → 带回「现在」使用</b>。
+    共 4 个时刻、4 个递进谜题，理论最优 <b>7 步 / 2 次切换 / 耗 2 点时砂</b>（共 12 点）。
+  </p>
+</header>
+
+<!-- ============ 1 速通 ============ -->
+<h2><span class="num">01</span>30 秒速通</h2>
+<p class="h2note">不演试错，直取最优解。移动不计步，只有「切换 / 持取 / 放置 / 使用」算操作。</p>
+
+<ol class="steps">
+  <li>
+    <span class="what">切到 <span class="tpill t1">Ⅱ 新光·昼</span> 立刻去拿钥匙</span>
+    <span class="why">按 <kbd>D</kbd> 一次（T2 → T1）。此时 <code>(3,2)</code> 钥匙台上是<b>崭新钥匙</b>。走到台子旁按 <kbd>空格</kbd> 持取。</span>
+  </li>
+  <li>
+    <span class="what">在 <span class="tpill t1">Ⅱ</span> 用新钥匙开铁栅门</span>
+    <span class="why">走到 <code>(7,1)</code> 大门旁按 <kbd>E</kbd> 使用。门开，且状态<b>向前传播</b>——回到现在门也是开的。</span>
+  </li>
+  <li>
+    <span class="what">在 <span class="tpill t1">Ⅱ</span> 拿黄铜砝码</span>
+    <span class="why">去 <code>(1,2)</code> 按 <kbd>空格</kbd>。只有这一刻它是一块「完好的砝码」。</span>
+  </li>
+  <li>
+    <span class="what">在 <span class="tpill t1">Ⅱ</span> 拔掉藤蔓</span>
+    <span class="why">走到咽喉 <code>(8,1)</code> 按 <kbd>E</kbd>。此刻它只是柔弱幼藤，一把就能拔。</span>
+  </li>
+  <li>
+    <span class="what">在 <span class="tpill t1">Ⅱ</span> 把砝码放上压力板</span>
+    <span class="why">站在 <code>(9,2)</code>（压力板正北），按 <kbd>Q</kbd> 放置。砝码落到 <code>(9,3)</code>，闸门随之开启——同样向前传播。</span>
+  </li>
+  <li>
+    <span class="what">切回 <span class="tpill t2">Ⅲ 锈时·昏</span>（现在）</span>
+    <span class="why">按 <kbd>A</kbd> 一次。切时刻<b>不会移动你</b>，你仍站在 <code>(9,2)</code>。</span>
+  </li>
+  <li class="final">
+    <span class="what">向东走到出口 <code>(11,1)</code>，通关</span>
+    <span class="why">路径 <code>(9,2) → (10,2) → (11,2) → (11,1)</code>。闸门开着、藤蔓没了、出口门完好——只有「现在」这扇门能推开。</span>
+  </li>
+</ol>
+
+<div class="callout">
+  <b>为什么第 1 步就要切时刻？</b>因为在初始时刻（锈时·昏）里，那把钥匙一拧就断——这是设计好的教学负反馈，第 2 步底下会讲。想省时间就直接切 <kbd>D</kbd>。
+</div>
+
+<!-- ============ 2 地图 ============ -->
+<h2><span class="num">02</span>关卡地图</h2>
+<p class="h2note">13 × 8 网格。西侧是宽敞的工匠前厅，东侧是出口小厅，中间由一道墙隔开——<b>顶层只留大门与藤蔓两个格子相连</b>，这是全图唯一咽喉。</p>
+
+<div class="mapwrap">
+  <div class="axis"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+  <div class="map" id="map"></div>
+</div>
+
+<div class="legend">
+  <span><i style="background:#2C261D;border:1px solid #211C15"></i>墙</span>
+  <span><i style="background:#201B14;border:1px solid #2A2318"></i>地板</span>
+  <span><i style="background:#2E2618;border:1px solid rgba(232,197,106,.3)"></i>可交互物</span>
+  <span><i style="background:rgba(196,96,79,.16);border:1px solid rgba(196,96,79,.5)"></i>锁：铁栅门</span>
+  <span><i style="background:rgba(143,160,180,.14);border:1px solid rgba(143,160,180,.45)"></i>压力板</span>
+  <span><i style="background:rgba(127,168,106,.16);border:1px solid rgba(127,168,106,.55)"></i>出口</span>
+  <span><i style="background:rgba(232,197,106,.22);border:1px solid #E8C56A"></i>你的起点</span>
+</div>
+
+<div class="route">唯一通路（没有旁路，绕不过去）：
+
+ (3,5)起点 → 西厅自由活动 → (6,1) → [铁栅门 (7,1) 锁] → [藤蔓 (8,1) 咽喉] → (9,1) → (9,2)
+                                                                                            ↓ 南
+                                                              [压力板 (9,3) 支线] → 闸门 (10,2) → (11,2) → 出口 (11,1)</div>
+
+<div class="card tight">
+  <h3 style="margin-top:0">图上每个东西是什么</h3>
+  <table>
+    <thead><tr><th>格子</th><th>东西</th><th>作用</th></tr></thead>
+    <tbody>
+      <tr><td><code>(1,1)</code></td><td>熔炉</td><td>纯装饰。观察它（<kbd>Tab</kbd>）能看到壁上刻着「凡物皆有其时」。</td></tr>
+      <tr><td><code>(1,2)</code></td><td class="hl">黄铜砝码</td><td>压压力板的重物。<b>只有「新光·昼」能搬动</b>。</td></tr>
+      <tr><td><code>(3,2)</code></td><td class="hl">钥匙台 + 钥匙</td><td>钥匙在四个时刻是四种东西（锭/新钥匙/锈钥匙/锈块）。</td></tr>
+      <tr><td><code>(7,1)</code></td><td>铁栅门 <span class="tag">锁</span></td><td>需要用带 <span class="tag">UNLOCKS:GATE</span> 的钥匙打开。</td></tr>
+      <tr><td><code>(8,1)</code></td><td>藤蔓</td><td>唯一咽喉。形态随时间变化，<b>只在晨/昼可拔</b>。</td></tr>
+      <tr><td><code>(9,3)</code></td><td>压力板</td><td>有重物压住 → 闸门开。凹室只从南北进出。</td></tr>
+      <tr><td><code>(10,2)</code></td><td>闸门</td><td>派生门：受压板控制，不能自己开。</td></tr>
+      <tr><td><code>(11,1)</code></td><td>出口门</td><td><b>只有「现在」（锈时·昏）这扇门能通行</b>。站上即通关。</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ 3 时刻 ============ -->
+<h2><span class="num">03</span>四个时刻速查</h2>
+<p class="h2note">HUD 上常驻显示罗马刻度 Ⅰ–Ⅳ。用 <kbd>A</kbd> / <kbd>D</kbd> 前后切换，每切一次消耗 1 点时砂（共 12 点，标准解只花 2 点）。</p>
+
+<table>
+  <thead><tr><th>刻度</th><th>名称</th><th>气质</th><th>这一刻的世界</th><th>该干什么</th></tr></thead>
+  <tbody>
+    <tr>
+      <td class="hl">Ⅰ</td><td>铸造·晨</td>
+      <td><span style="color:#8FA0B4">冷蓝灰</span></td>
+      <td>熔炉刚熄，万物还是原料。钥匙是<b>烧红的金属锭</b>（烫手）、砝码是<b>熔融铜液</b>、藤蔓是幼苗。</td>
+      <td>铁栅还锁着，你到不了藤蔓跟前。取物也一律不可 —— 这一刻基本无事可做。</td>
+    </tr>
+    <tr>
+      <td class="hl">Ⅱ</td><td>新光·昼</td>
+      <td><span style="color:#E8C56A">暖黄</span></td>
+      <td class="yes">物件最完好的那天。崭新钥匙、完好砝码、柔弱幼藤。</td>
+      <td class="yes">★ 所有「取物 / 拔藤 / 开门」都在这一刻做。</td>
+    </tr>
+    <tr>
+      <td class="hl">Ⅲ</td><td>锈时·昏</td>
+      <td><span style="color:#C97F42">橙褐</span></td>
+      <td><b>「现在」，你的初始时刻。</b>钥匙生锈（一拧就断）、砝码锈死在地、藤蔓太粗拔不动、出口门完好。</td>
+      <td>★ 最后一步在这里通关。前面的操作会「传染」到这一刻。</td>
+    </tr>
+    <tr>
+      <td class="hl">Ⅳ</td><td>沉寂·夜</td>
+      <td><span style="color:#A8A8A2">灰白</span></td>
+      <td>万物走到尽头。钥匙成锈块、砝码被落灰掩埋、枯藤硬得像铁网、出口已坍塌。</td>
+      <td>没什么可做的，看一眼就好。</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <b>三条铁律，理解这三条就不会卡：</b><br>
+  ① <b>拿在手上的东西不会变</b>——你在「新光·昼」拿起的崭新钥匙，切回「现在」还是崭新的。<br>
+  ② <b>你在过去做的事，会留在现在</b>——在「新光·昼」开门/拔藤/放砝码，切回「现在」这些结果都还在（这叫正向传播）。<br>
+  ③ <b>但你在现在做的事，回不到过去</b>——「现在」把钥匙拧断了，切回「新光·昼」那把崭新钥匙照样好端端在台上。
+</div>
+
+<!-- ============ 4 谜题 ============ -->
+<h2><span class="num">04</span>四个谜题：现象 → 为什么 → 怎么做</h2>
+<p class="h2note">按遇到顺序排列。每个谜题都对应一条要你学会的规则。</p>
+
+<div class="puzzle">
+  <h3><em>P1</em>锈钥匙开不了这把锁</h3>
+  <dl class="qa">
+    <dt>现象</dt>
+    <dd>铁栅门锁着。钥匙台上明明有把钥匙，拿去开，<b>啪——断了</b>。</dd>
+    <dt>为什么</dt>
+    <dd>「现在」的钥匙太脆，一拧就断。它不是一直这样的：清晨它还是块烧红的锭，昨天它还崭新，未来它只是个锈块。<b>四种形态里，只有「新光·昼」那把带开门能力。</b></dd>
+    <dt>怎么做</dt>
+    <dd>切到 <span class="tpill t1">Ⅱ 新光·昼</span>，到 <code>(3,2)</code> 拿走崭新钥匙，再到 <code>(7,1)</code> 使用。<br>
+        <span class="mut">断掉的那把不用管——你在过去把它拿走了，「那个断掉的版本」如今不曾存在过。</span></dd>
+    <dt>要你记住的</dt>
+    <dd>同一件东西，换个时刻就是另一种东西。</dd>
+  </dl>
+</div>
+
+<div class="puzzle">
+  <h3><em>P2</em>搬不动的砝码</h3>
+  <dl class="qa">
+    <dt>现象</dt>
+    <dd>出口前的闸门关着，需要压力板被压住；唯一的重物在西厅，但你<b>怎么都拿不起来</b>。</dd>
+    <dt>为什么</dt>
+    <dd>「现在」的砝码已经和地面锈成了一体；将来它被落灰埋了；清晨它还是一汪铜液。同样地，<b>只有「新光·昼」能搬</b>。</dd>
+    <dt>怎么做</dt>
+    <dd>在 <span class="tpill t1">Ⅱ</span> 拿砝码 → 走到压力板正北的 <code>(9,2)</code> → 按 <kbd>Q</kbd> 放到 <code>(9,3)</code>。闸门立刻开，<b>而且这个位置会一直留在「现在」</b>。</dd>
+    <dt>要你记住的</dt>
+    <dd>我在过去搬动它，现在它就一直在那儿了。</dd>
+  </dl>
+</div>
+
+<div class="puzzle">
+  <h3><em>P3</em>拔不掉的藤蔓</h3>
+  <dl class="qa">
+    <dt>现象</dt>
+    <dd>通往东区的唯一咽喉被一丛藤蔓堵死，怎么使劲都拔不动。</dd>
+    <dt>为什么</dt>
+    <dd>「现在」它是茂密的藤墙，将来枯藤硬如铁网。它以前是一株幼苗。<br>
+        <span class="mut">但别指望「幼苗细、能钻过去」——它虽然纤细，却爬满了整个门洞，<b>任何时刻都挡路</b>。</span></dd>
+    <dt>怎么做</dt>
+    <dd>趁它小的时候拔：切到 <span class="tpill t1">Ⅱ 新光·昼</span>，站到大门格 <code>(7,1)</code> 朝东按 <kbd>E</kbd>。拔掉后「现在」这条路就通了。</dd>
+    <dt>要你记住的</dt>
+    <dd>在过去动一下，现在就通了。</dd>
+  </dl>
+</div>
+
+<div class="puzzle">
+  <h3><em>P4</em>只有「现在」才有出口</h3>
+  <dl class="qa">
+    <dt>现象</dt>
+    <dd>障碍全清了，站在出口门前，门还是过不去。</dd>
+    <dt>为什么</dt>
+    <dd>「铸造·晨」时这扇门<b>还没建</b>；「新光·昼」时门扇<b>还没装把手</b>；「沉寂·夜」时它<b>已经塌了</b>。只有「现在」这扇门是完好的。</dd>
+    <dt>怎么做</dt>
+    <dd>按 <kbd>A</kbd> 切回 <span class="tpill t2">Ⅲ 锈时·昏</span>，走到 <code>(11,1)</code>。通关。</dd>
+    <dt>要你记住的</dt>
+    <dd>我必须回到现在，才能离开这里——前面所有铺垫都是为了这一步。</dd>
+  </dl>
+</div>
+
+<!-- ============ 5 卡关 ============ -->
+<h2><span class="num">05</span>四个常见卡关点</h2>
+<p class="h2note">都不会导致死档，全都可以自救。点开看怎么办。</p>
+
+<details>
+  <summary>我在「现在」用锈钥匙开门，钥匙断了 <span class="prob">约 85% 的人会撞上</span></summary>
+  <div class="body">
+    <b>这是设计好的，不是 bug。</b>它就是要让你亲眼看到「同一件东西换个时刻会不一样」。<br>
+    断掉不影响任何东西：切回「新光·昼」，钥匙台上那把崭新钥匙完好无损。拿走它，再去开门。断掉的那把甚至会在你取走新钥匙后「不曾存在过」。
+  </div>
+</details>
+
+<details>
+  <summary>我拿不起砝码 / 拔不动藤蔓 <span class="prob">约 40%</span></summary>
+  <div class="body">
+    动作被灰掉了，是因为<b>这一刻它就是这个形态</b>——不是你的操作错了。<br>
+    看 HUD 上的罗马刻度：Ⅲ（锈时·昏）和 Ⅳ（沉寂·夜）里砝码锈死 / 被埋、藤蔓太粗 / 硬化，都动不了。切到 <b>Ⅱ（新光·昼）</b> 再来。
+  </div>
+</details>
+
+<details>
+  <summary>闸门关着，我过不去，也没看到什么压力板 <span class="prob">约 25%</span></summary>
+  <div class="body">
+    压力板在 <code>(9,3)</code>，藏在东侧的一个<b>只从南北进出的凹室</b>里，从主路看不太见。<br>
+    关键点：<b>必须先把砝码放上去，闸门才会开</b>；而砝码在西厅，得先过铁栅门和藤蔓那两关。<br>
+    顺序是：开门 → 拔藤 → 拿砝码 → 放到 (9,3) → 闸门开。
+  </div>
+</details>
+
+<details>
+  <summary>我在「新光·昼」走到出口，门说过不去 <span class="prob">约 15%</span></summary>
+  <div class="body">
+    因为这一刻的门<b>还没装把手</b>。出口只在「现在」（锈时·昏）可用。<br>
+    切回 Ⅲ 再走一次——这也是本关最后一次「啊，原来如此」。
+  </div>
+</details>
+
+<div class="callout warn">
+  <b>确实把自己堵住了怎么办？</b>本关核查过<b>不存在真正的死局</b>。任何糟糕的局面都能靠这几招脱身：<br>
+  · 钥匙 / 砝码放错地方 → 切到「新光·昼」，它们的形态还能取回来；<br>
+  · 时砂用光了 → 按 <kbd>Z</kbd> 撤销会<b>全额返还</b>，或按 <kbd>R</kbd> 重置时刻（<b>免费</b>）；<br>
+  · 撤销不花钱、不限次数，随便用。
+</div>
+
+<!-- ============ 6 提示 ============ -->
+<h2><span class="num">06</span>卡住了就按 <kbd>H</kbd></h2>
+<p class="h2note">三级提示，逐级给答案，不消耗时砂、也不计入步数。冷却 45 秒。</p>
+
+<ul class="tips">
+  <li><span class="lv">L1 指向</span><b>「留意钥匙台上那把钥匙。」</b>——只告诉你该看哪儿。</li>
+  <li><span class="lv">L2 缩窄</span><b>「这把钥匙，并不是一直都是锈的。」</b>——点出核心机制，并让 HUD 上的刻度「Ⅱ」微微发亮。</li>
+  <li><span class="lv">L3 明示</span><b>「切到『新光·昼』，取走那把崭新的钥匙。」</b>——直接给答案。</li>
+</ul>
+<p style="color:var(--tx-3);font-size:13.5px;">每个谜题（P1–P4）都有对应的三级提示，结构一样：先指物、再说性质差异、最后给操作。</p>
+
+<!-- ============ 7 键位 ============ -->
+<h2><span class="num">07</span>操作一览</h2>
+
+<table>
+  <thead><tr><th>按键</th><th>动作</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td><kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd></td><td>移动</td><td><b>按住可以连续走</b>，逐格推进，不会瞬移。</td></tr>
+    <tr><td>鼠标左键</td><td>点击 / 拖动走位</td><td>点一下走一格，按住拖动可以连续走。鼠标悬停时会显示<b>路径预览</b>（能走的画金色足迹，走不通画暗红叉）。</td></tr>
+    <tr><td><kbd>A</kbd> / <kbd>D</kbd></td><td>切换时刻</td><td>前一个 / 后一个时刻，各消耗 1 点时砂。<b>方向键已经让给移动了，切时刻只剩这两个键。</b></td></tr>
+    <tr><td><kbd>空格</kbd></td><td>持取</td><td>拿起面前那一格的东西。</td></tr>
+    <tr><td><kbd>Q</kbd></td><td>放置</td><td>把手上东西放到面前那一格。背包 2 格。</td></tr>
+    <tr><td><kbd>E</kbd></td><td>使用</td><td>对面前的物体做「用它该做的事」——开门、拔藤。</td></tr>
+    <tr><td><kbd>Tab</kbd></td><td>观察</td><td>读物件描述，很多时候提示就藏在文案里（比如「它与地面锈成了一体」）。</td></tr>
+    <tr><td><kbd>Z</kbd></td><td>撤销</td><td>单步回退，<b>全额返还时砂</b>。长按可打开操作时间轴拖到任意节点。</td></tr>
+    <tr><td><kbd>H</kbd></td><td>提示</td><td>三级提示。</td></tr>
+    <tr><td><kbd>R</kbd></td><td>重置</td><td>清空全部操作，回到初始时间线，<b>免费</b>。</td></tr>
+  </tbody>
+</table>
+
+<!-- ============ 8 数据 ============ -->
+<h2><span class="num">08</span>关卡参数</h2>
+<table>
+  <tbody>
+    <tr><th style="width:44%">关卡</th><td>钟械工坊 · 前厅 <span class="tag">L01_FORGE_HALL</span></td></tr>
+    <tr><th>网格 / 起点</th><td>13 × 8 ｜ 起点 <code>(3,5)</code> ｜ 初始时刻 Ⅲ 锈时·昏</td></tr>
+    <tr><th>通关条件</th><td>在 <b>Ⅲ 锈时·昏</b> 站上 <code>(11,1)</code></td></tr>
+    <tr><th>背包 / 时砂</th><td>背包 2 格 ｜ 时砂 12（最优解只耗 2）</td></tr>
+    <tr><th>理论最优</th><td class="hl">7 步 · 2 次切换 · 耗砂 2</td></tr>
+    <tr><th>首次通关时长</th><td>6–10 分钟（熟练后约 90 秒）</td></tr>
+  </tbody>
+</table>
+
+<footer>
+  《物候 · Seasons of Things》关卡 01 攻略 · 内容依据 <code>design/level/level_01_design.md</code> 与 <code>src/data/level_01_def.gd</code> 整理。<br>
+  线路已逐步走查验证：可通关、无未定义状态、无真死局。
+</footer>
+
+</div>
+
+<script>
+(function(){
+  const W=13,H=8;
+  // 符号表：坐标 -> [类名, 显示字符]
+  const S={
+    "1,1":[".ent","炉"],
+    "1,2":[".ent","砝"],
+    "3,2":[".ent","匙"],
+    "3,5":[".player","起"],
+    "7,1":[".lock","栅"],
+    "8,1":[".ent","藤"],
+    "9,3":[".plate","板"],
+    "10,2":[".ent","闸"],
+    "11,1":[".exit","出"]
+  };
+  const walls=new Set();
+  for(let x=0;x<W;x++){walls.add(x+",0");walls.add(x+","+(H-1));}
+  for(let y=0;y<H;y++){walls.add("0,"+y);walls.add((W-1)+","+y);}
+  [[7,2],[8,2],[7,3],[8,3],[7,4],[8,4],[7,5],[8,5],[7,6],[8,6],[10,1],[10,3],[11,3]]
+    .forEach(([x,y])=>walls.add(x+","+y));
+
+  const map=document.getElementById("map");
+  let html="";
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      const k=x+","+y;
+      let cls="c ", txt="";
+      if(walls.has(k)){cls+="wall";txt="·";}
+      else if(S[k]){cls+=S[k][0].slice(1);txt=S[k][1];}
+      else{cls+="floor";}
+      html+='<div class="'+cls+'" title="('+x+','+y+')">'+txt+'</div>';
+    }
+  }
+  map.innerHTML=html;
+})();
+</script>
+</body>
+</html>

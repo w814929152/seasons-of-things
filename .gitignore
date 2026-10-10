@@ -1,0 +1,21 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Godot editor / export artifacts
+export.cfg
+export_presets.cfg
+*.translation
+
+# Mono / .NET (if ever added)
+.mono/
+data_*/
+
+# AI collaboration workspace (local session memory & artifacts)
+.workbuddy/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.tmp
+*~

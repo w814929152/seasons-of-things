@@ -1,0 +1,327 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+════════ 《物候》headless 断言测试 ════════
+
+── 用例组：resolve_state 纯函数 / 绝不向过去传播
+   [ck] PASS  同一输入两次求值结果一致
+   [ck] PASS  T1 基线形态 = KEY_NEW  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  T1 基线位置 = (3,2)  (实际=(3, 2) / 期望=(3, 2))
+   [ck] PASS  T1 基线可取
+   [ck] PASS  写入 @T2 后，T0/T1 逐字段无变化
+   [ck] PASS  T2 生效：钥匙缺席  (实际=(-1, -1) / 期望=(-1, -1))
+   [ck] PASS  T3 生效（forward 传播）  (实际=(-1, -1) / 期望=(-1, -1))
+   [ck] PASS  T0 仍是金属锭（不受影响）  (实际=INGOT / 期望=INGOT)
+   [ck] PASS  T1 仍是崭新钥匙（不受影响）  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  写入 @T1 后 T0 位置仍为 (3,2)  (实际=(3, 2) / 期望=(3, 2))
+   [ck] PASS  写入 @T1 后 T0 逐字段无变化
+   [ck] PASS  T1 生效（写入点自身生效）  (实际=(-1, -1) / 期望=(-1, -1))
+   [ck] PASS  后写覆盖先写（seq 升序）  (实际=(1, 1) / 期望=(1, 1))
+   [ck] PASS  锚定门不接受 pos 覆盖  (实际=(4, 1) / 期望=(4, 1))
+   [ck] PASS  锚定门接受 open 覆盖（GDD §6）
+   [ck] PASS  带 override 时重复求值结果一致
+   [ck] PASS  时刻数 = 4
+
+── 用例组：撤销复原 / 时砂账本
+   [ck] PASS  初始时砂 = 12  (实际=12 / 期望=12)
+   [ck] PASS  初始时刻 = T2  (实际=2 / 期望=2)
+   [ck] PASS  初始坐标 (2,3)  (实际=(2, 3) / 期望=(2, 3))
+   [ck] PASS  已执行操作数 = 10（撤销同样 10 次，正好回到初始态）  (实际=10 / 期望=10)
+   [ck] PASS  3 次切换后时砂 = 9  (实际=9 / 期望=9)
+   [ck] PASS  全过程时砂非负（当前 9）
+   [ck] PASS  连续撤销 10 次全部成功
+   [ck] PASS  撤销后与初始态逐字段一致
+   [ck] PASS  撤销全额返还时砂 → 12  (实际=12 / 期望=12)
+   [ck] PASS  撤销回滚时刻 → T2  (实际=2 / 期望=2)
+   [ck] PASS  撤销回滚坐标 → 回到首次操作前  (实际=(3, 1) / 期望=(3, 1))
+   [ck] PASS  撤销清空全部 Override  (实际=0 / 期望=0)
+   [ck] PASS  撤销清空背包  (实际=0 / 期望=0)
+   [ck] PASS  撤销栈已见底
+   [ck] PASS  栈空时撤销返回 false（不报错）
+   [ck] PASS  重置后与出厂态逐字段一致
+   [ck] PASS  重置全额返还时砂 → 12  (实际=12 / 期望=12)
+   [ck] PASS  重置回滚坐标 → (2,3)  (实际=(2, 3) / 期望=(2, 3))
+   [ck] PASS  反复切换后时砂仍非负（剩余 0，切了 12 次）
+   [ck] PASS  时砂最终耗尽为 0  (实际=0 / 期望=0)
+   [ck] PASS  时砂耗尽后不可切换
+   [ck] PASS  时砂耗尽后仍可撤销
+   [ck] PASS  撤销后时砂返还（1）
+
+── 用例组：形态锁不影响占位/压感
+   [ck] PASS  T2 砝码形态 = WEIGHT_SEIZED  (实际=WEIGHT_SEIZED / 期望=WEIGHT_SEIZED)
+   [ck] PASS  T2 砝码带 IMMOVABLE
+   [ck] PASS  T2 砝码仍带 PRESSER（形态锁不摘标签）
+   [ck] PASS  T2 砝码不可取（形态锁生效）
+   [ck] PASS  初始 T2 压力板未压（砝码还在 (1,2)）
+   [ck] PASS  T1 砝码已在压力板上  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  T2 砝码仍在压力板上（正向传播）  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  T3 砝码仍在压力板上（正向传播）  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  T0 不受影响（绝不向过去传播）  (实际=(1, 2) / 期望=(1, 2))
+   [ck] PASS  T2 形态仍是锈死（放置不冻结形态）  (实际=WEIGHT_SEIZED / 期望=WEIGHT_SEIZED)
+   [ck] PASS  T2 仍是 IMMOVABLE
+   [ck] PASS  ★ 压力板仍为 pressed —— 形态锁不影响压感
+   [ck] PASS  ★ 闸门随之开启（派生：open = pressed）
+   [ck] PASS  ★ 闸门格 (7,2) 在 T2 可通行
+   [ck] PASS  T3 形态 = WEIGHT_BURIED  (实际=WEIGHT_BURIED / 期望=WEIGHT_BURIED)
+   [ck] PASS  T3 带 OCCLUDED
+   [ck] PASS  ★ T3 压力板仍为 pressed（OCCLUDED 不影响压感）
+   [ck] PASS  T0 形态 = MOLTEN  (实际=MOLTEN / 期望=MOLTEN)
+   [ck] PASS  T0 带 HOT
+   [ck] PASS  T0 也带 PRESSER
+   [ck] PASS  T2 锈死：持取被拒绝
+   [ck] PASS  背包仍为空  (实际=0 / 期望=0)
+   [ck] PASS  T1 形态完好  (实际=WEIGHT_OK / 期望=WEIGHT_OK)
+   [ck] PASS  T1 可取（形态锁只在该时刻生效）
+
+── 用例组：关卡 01 · 标准解法重放（§7 十步）
+   [ck] PASS  步0：初始时刻 T2  (实际=2 / 期望=2)
+   [ck] PASS  步0：初始坐标 (2,3)  (实际=(2, 3) / 期望=(2, 3))
+   [ck] PASS  步0：时砂 12  (实际=12 / 期望=12)
+   [ck] PASS  步0：T2 藤蔓堵塞 (5,1)
+   [ck] PASS  步0：T2 铁栅门关着
+   [ck] PASS  步0：T2 闸门关着
+   [ck] PASS  步1：T2 持取钥匙成功
+   [ck] PASS  步1：背包 1 件  (实际=1 / 期望=1)
+   [ck] PASS  步1：冻结形态 = KEY_RUSTY  (实际=KEY_RUSTY / 期望=KEY_RUSTY)
+   [ck] PASS  步1：T2 钥匙缺席（写入 pos=VOID）  (实际=(-1, -1) / 期望=(-1, -1))
+   [ck] PASS  步2：USE 锈钥匙于铁栅（触发折断）
+   [ck] PASS  步2：背包已空（钥匙断了）  (实际=0 / 期望=0)
+   [ck] PASS  步2：T2 钥匙 = KEY_BROKEN  (实际=KEY_BROKEN / 期望=KEY_BROKEN)
+   [ck] PASS  步2：残骸落在 (3,1)  (实际=(3, 1) / 期望=(3, 1))
+   [ck] PASS  ★ 验收2：T1 钥匙仍为 KEY_NEW  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  ★ 验收2：T1 钥匙仍在 (3,2)  (实际=(3, 2) / 期望=(3, 2))
+   [ck] PASS  ★ 验收2：T1 钥匙仍可取
+   [ck] PASS  ★ 验收2：T1 钥匙仍带 UNLOCKS:GATE
+   [ck] PASS  ★ 验收2：T0 仍是金属锭  (实际=INGOT / 期望=INGOT)
+   [ck] PASS  ★ 验收2：T1 的门没被打开
+   [ck] PASS  步3：切换 T2 → T1
+   [ck] PASS  步3：当前时刻 = T1  (实际=1 / 期望=1)
+   [ck] PASS  步3：时砂 11  (实际=11 / 期望=11)
+   [ck] PASS  步4：T1 持取钥匙
+   [ck] PASS  步4：冻结形态 = KEY_NEW  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  步5：USE 新钥匙于铁栅
+   [ck] PASS  步5：T1 铁栅开启
+   [ck] PASS  ★ 验收3：T2 铁栅也开（正向传播）
+   [ck] PASS  步5：T3 铁栅也开（正向传播）
+   [ck] PASS  ★ T0 仍锁着（绝不向过去传播）
+   [ck] PASS  步5：背包已空（钥匙留锁孔）  (实际=0 / 期望=0)
+   [ck] PASS  步5：T1 铁栅格可通行
+   [ck] PASS  步6：T1 持取砝码
+   [ck] PASS  步6：冻结形态 = WEIGHT_OK  (实际=WEIGHT_OK / 期望=WEIGHT_OK)
+   [ck] PASS  步7：USE 拔除藤蔓
+   [ck] PASS  步7：T1 藤蔓已清除
+   [ck] PASS  ★ 验收4：T2 藤蔓已清除（正向传播）
+   [ck] PASS  ★ 验收4：T2 的 (5,1) 可通行
+   [ck] PASS  T0 藤蔓（SPROUT）本就不阻挡
+   [ck] PASS  步8：放置砝码于压力板 (6,3)
+   [ck] PASS  步8：T1 砝码在压力板上  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  ★ 验收3：T2 砝码在压力板上（正向传播）  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  ★ 验收6：T2 形态仍是锈死 SEIZED  (实际=WEIGHT_SEIZED / 期望=WEIGHT_SEIZED)
+   [ck] PASS  ★ 验收6：T2 带 IMMOVABLE
+   [ck] PASS  ★ 验收6：压力板仍 pressed（形态锁不影响压感）
+   [ck] PASS  ★ 验收3：T2 闸门开启
+   [ck] PASS  ★ 验收3：T2 闸门格可通行
+   [ck] PASS  步9：切换 T1 → T2
+   [ck] PASS  步9：当前时刻 = T2  (实际=2 / 期望=2)
+   [ck] PASS  步9：时砂 10（两次切换共耗 2）  (实际=10 / 期望=10)
+   [ck] PASS  步9 校验：GATE 开
+   [ck] PASS  步9 校验：VINE 不存在
+   [ck] PASS  步9 校验：GRATE 开
+   [ck] PASS  步9 校验：EXIT 完好可通行
+   [ck] PASS  步10：存在通往出口的路径（4 格）
+   [ck] PASS  步10：抵达 (8,1)  (实际=(8, 1) / 期望=(8, 1))
+   [ck] PASS  🏁 验收1：在 T2 站上出口 → 通关
+   [ck] PASS  通关时时砂 = 10（最优耗 2）  (实际=10 / 期望=10)
+   [ck] PASS  Override 日志非空（27 条）
+   [ck] PASS  A5 对照：世界上的钥匙在 T2 已经是锈的  (实际=KEY_RUSTY / 期望=KEY_RUSTY)
+   [ck] PASS  A5：T1 取到崭新钥匙
+   [ck] PASS  A5：拾取瞬间冻结为 KEY_NEW  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  ★ A5：切到 T2 后手持物不变（世界变了，手上的没变）  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  ★ A5：切到 T3 后手持物仍不变  (实际=KEY_NEW / 期望=KEY_NEW)
+   [ck] PASS  ★ A5：把过去的新钥匙带回『现在』开门 → 成功
+   [ck] PASS  A5：T2 铁栅已开
+   [ck] PASS  A5：钥匙消耗（留在锁孔）  (实际=0 / 期望=0)
+
+── 用例组：通关判定 / 死锁谓词
+   [ck] PASS  验收5：站在 (8,1) 于 T0 不通关  (实际=false / 期望=false)
+   [ck] PASS  验收5：站在 (8,1) 于 T1 不通关  (实际=false / 期望=false)
+   [ck] PASS  验收5：站在 (8,1) 于 T2 通关  (实际=true / 期望=true)
+   [ck] PASS  验收5：站在 (8,1) 于 T3 不通关  (实际=false / 期望=false)
+   [ck] PASS  T1 出口 NO_HANDLE → 阻挡
+   [ck] PASS  T3 出口 COLLAPSED → 阻挡
+   [ck] PASS  T0 出口 NOT_BUILT → 阻挡
+   [ck] PASS  T2 出口 INTACT → 可通行
+   [ck] PASS  初始态：非死局
+   [ck] PASS  钥匙折断后：仍非死局（T1 自愈）
+   [ck] PASS  开门后：仍非死局
+   [ck] PASS  砝码上板后：仍非死局
+   [ck] PASS  拔藤后：仍非死局
+   [ck] PASS  伪造不可能需求 → 死锁谓词返回 true（谓词非空实现）
+   [ck] PASS  恢复需求后 → 仍非死局
+   [ck] PASS  背包容量 = 2  (实际=2 / 期望=2)
+   [ck] PASS  背包装到 2 件  (实际=2 / 期望=2)
+   [ck] PASS  背包满时拒绝持取
+   [ck] PASS  背包仍为 2 件  (实际=2 / 期望=2)
+
+── 用例组：场景装配 / LevelManager 接线
+   [ck] PASS  LevelManager 建出 TimeController
+   [ck] PASS  LevelManager 载入关卡数据
+   [ck] PASS  关卡 ID = L01_FORGE_HALL  (实际=L01_FORGE_HALL / 期望=L01_FORGE_HALL)
+   [ck] PASS  环境层已挂载
+   [ck] PASS  玩家节点已挂载
+   [ck] PASS  道具容器已挂载
+   [ck] PASS  生成 9 个 TimeEntity 节点  (实际=9 / 期望=9)
+   [ck] PASS  场景层：切到 T1  (实际=1 / 期望=1)
+   [ck] PASS  场景层：持取钥匙成功  (实际=1 / 期望=1)
+   [ck] PASS  场景层：铁栅已开
+   [ck] PASS  场景层：持取砝码成功  (实际=1 / 期望=1)
+   [ck] PASS  场景层：砝码已放上压力板  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  场景层：压力板被压住
+   [ck] PASS  场景层：藤蔓已拔除
+   [ck] PASS  场景层：残影开关不报错
+   [ck] PASS  场景层：提示/反馈文案有输出（8 条）
+   [ck] PASS  场景层：切回 T2  (实际=2 / 期望=2)
+   [ck] PASS  场景层：T2 闸门可通行
+   [ck] PASS  🏁 场景层：抵达出口并触发通关信号
+   [ck] PASS  refresh_all 不报错
+   [ck] PASS  状态文本非空：时刻 Ⅲ 锈时·昏 ｜ 时砂 10/12 ｜ 背包 0/2 ｜ 坐标 (8,1)
+
+── 用例组：§11.1 放置目标选择专项 P1–P6（不通过 = 质量门不通过）
+   [ck] PASS  P1 前置：当前 T1  (实际=1 / 期望=1)
+   [ck] PASS  P1 前置：手持砝码 1 件  (实际=1 / 期望=1)
+   [ck] PASS  P1 前置：站在 (6,1)  (实际=(6, 1) / 期望=(6, 1))
+   [ck] PASS  P1：已走到 (6,2)  (实际=(6, 2) / 期望=(6, 2))
+   [ck] PASS  P1：朝向 = 末步方向 (0,1)  (实际=(0, 1) / 期望=(0, 1))
+   [ck] PASS  P1：砝码落在压力板 (6,3)  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  P1：plate_pressed(T1) == true
+   [ck] PASS  P1：背包已空  (实际=0 / 期望=0)
+   [ck] PASS  P2 前置：站在压力板 (6,3)  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  P2：朝向 = 末步方向 (0,-1)  (实际=(0, -1) / 期望=(0, -1))
+   [ck] PASS  P2：面向格是空地 (6,1)  (实际=(6, 1) / 期望=(6, 1))
+   [ck] FAIL  P2：★ 仍落在 (6,3)（U3 容器格吸附优先于空地）  (实际=(6, 1) / 期望=(6, 3))
+   [ck] FAIL  P2：plate_pressed(T1) == true
+   [ck] PASS  P2-诊断：砝码落到 (6,1) 后该格被占（砝码 solid=true）→ 咽喉被自己堵住
+   [ck] PASS  P2-诊断：仍可从 (6,2) 把砝码取回（可自救，非硬死局）
+   [ck] PASS  P3 前置：面向格 = 空地 (6,1)  (实际=(6, 1) / 期望=(6, 1))
+   [ck] FAIL  P3：★ 落在 (6,3) 而非 (6,1)（隔离走路，定位 U1 还是 U3）  (实际=(6, 1) / 期望=(6, 3))
+   [ck] FAIL  P3：plate_pressed(T1) == true
+   [ck] PASS  P4：已切到 T2  (实际=2 / 期望=2)
+   [ck] PASS  P4：★ resolve_state(WEIGHT,T2).pos == (6,3)  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  P4：★ plate_pressed(T2) == true
+   [ck] PASS  P4：★ grate_open(T2) == true
+   [ck] PASS  P4：闸门格 (7,2) 在 T2 可通行
+   [ck] PASS  P5：抵达 (8,1)  (实际=(8, 1) / 期望=(8, 1))
+   [ck] PASS  P5：★ check_win == true
+   [ck] PASS  P5：evaluate_win() == true
+   [ck] PASS  P5：★ 时砂剩余 10（12 − 2 次相邻切换）  (实际=10 / 期望=10)
+   [ck] PASS  P6 前置：站在起点 (2,3)  (实际=(2, 3) / 期望=(2, 3))
+   [ck] PASS  P6 前置：空手  (实际=0 / 期望=0)
+   [ck] PASS  P6：(2,3) → (6,2) 路径存在（8 格）
+   [ck] PASS  P6：路径末步方向 = (0,1)（(6,2) 只能从北/南进，南面必经 (6,2)）  (实际=(0, 1) / 期望=(0, 1))
+   [ck] PASS  P6：已走到 (6,2)  (实际=(6, 2) / 期望=(6, 2))
+   [ck] PASS  P6：★ 到达时 _facing == (0,1)  (实际=(0, 1) / 期望=(0, 1))
+   [ck] PASS  P6：★ 面向格 = (6,3)，take/use 命中的是压力板  (实际=(6, 3) / 期望=(6, 3))
+   [ck] PASS  P6：面向格上的实体 = PLATE（实际：PLATE）
+
+── 用例组：HUD 刷新专项（争议裁决）
+   [ck] PASS  HUD 已就绪（_ready 已由引擎触发）
+   [ck] PASS  A0：初始 T2  (实际=2 / 期望=2)
+   [ck] PASS  A0 绑定后：HUD 时砂 = 12 / 12  (实际=12 / 12 / 期望=12 / 12)
+   [ck] PASS  A0 绑定后：tc 真相 时砂 = 12  (实际=12 / 期望=12)
+   [ck] PASS  A0 绑定后：HUD 状态行含「背包 0/2」
+   [ck] PASS  A0 绑定后：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  A1：已切到 T1  (实际=1 / 期望=1)
+   [ck] PASS  A1 切时刻后：HUD 时砂 = 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  A1 切时刻后：tc 真相 时砂 = 11  (实际=11 / 期望=11)
+   [ck] PASS  A1 切时刻后：HUD 状态行含「背包 0/2」
+   [ck] PASS  A1 切时刻后：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  A2 持取钥匙后：HUD 时砂 = 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  A2 持取钥匙后：tc 真相 时砂 = 11  (实际=11 / 期望=11)
+   [ck] PASS  A2 持取钥匙后：HUD 状态行含「背包 1/2」
+   [ck] PASS  A2 持取钥匙后：tc 真相 背包 = 1  (实际=1 / 期望=1)
+   [ck] PASS  A3 开锁后（钥匙留锁孔）：HUD 时砂 = 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  A3 开锁后（钥匙留锁孔）：tc 真相 时砂 = 11  (实际=11 / 期望=11)
+   [ck] PASS  A3 开锁后（钥匙留锁孔）：HUD 状态行含「背包 0/2」
+   [ck] PASS  A3 开锁后（钥匙留锁孔）：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  A4 持取砝码后：HUD 时砂 = 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  A4 持取砝码后：tc 真相 时砂 = 11  (实际=11 / 期望=11)
+   [ck] PASS  A4 持取砝码后：HUD 状态行含「背包 1/2」
+   [ck] PASS  A4 持取砝码后：tc 真相 背包 = 1  (实际=1 / 期望=1)
+   [ck] PASS  A5 拔藤后：HUD 时砂 = 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  A5 拔藤后：tc 真相 时砂 = 11  (实际=11 / 期望=11)
+   [ck] PASS  A5 拔藤后：HUD 状态行含「背包 1/2」
+   [ck] PASS  A5 拔藤后：tc 真相 背包 = 1  (实际=1 / 期望=1)
+   [ck] PASS  A6 放置砝码后：HUD 时砂 = 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  A6 放置砝码后：tc 真相 时砂 = 11  (实际=11 / 期望=11)
+   [ck] PASS  A6 放置砝码后：HUD 状态行含「背包 0/2」
+   [ck] PASS  A6 放置砝码后：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  A7：已切回 T2  (实际=2 / 期望=2)
+   [ck] PASS  A7 切回 T2 后：HUD 时砂 = 10 / 12  (实际=10 / 12 / 期望=10 / 12)
+   [ck] PASS  A7 切回 T2 后：tc 真相 时砂 = 10  (实际=10 / 期望=10)
+   [ck] PASS  A7 切回 T2 后：HUD 状态行含「背包 0/2」
+   [ck] PASS  A7 切回 T2 后：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  A8：通关
+   [ck] PASS  A8 通关时：HUD 时砂 = 10 / 12  (实际=10 / 12 / 期望=10 / 12)
+   [ck] PASS  A8 通关时：tc 真相 时砂 = 10  (实际=10 / 期望=10)
+   [ck] PASS  A8 通关时：HUD 状态行含「背包 0/2」
+   [ck] PASS  A8 通关时：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  A9：撤销一步 → 坐标回滚到 (6,2)  (实际=(6, 2) / 期望=(6, 2))
+   [ck] PASS  A9：撤销移动不改变时砂（移动不计步）→ 10  (实际=10 / 期望=10)
+   [ck] PASS  A9：HUD 时砂随撤销刷新为 10 / 12  (实际=10 / 12 / 期望=10 / 12)
+   [ck] PASS  A10 重置后：HUD 时砂 = 12 / 12  (实际=12 / 12 / 期望=12 / 12)
+   [ck] PASS  A10 重置后：tc 真相 时砂 = 12  (实际=12 / 期望=12)
+   [ck] PASS  A10 重置后：HUD 状态行含「背包 0/2」
+   [ck] PASS  A10 重置后：tc 真相 背包 = 0  (实际=0 / 期望=0)
+   [ck] PASS  HUD 已就绪（_ready 已由引擎触发）
+   [ck] PASS  B1：直接 tc.shift() 生效 → T1  (实际=1 / 期望=1)
+   [ck] PASS  B1：★ 直接调 tc.shift() 后 HUD 仍刷新为 11 / 12  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  B2：★ 直接调 tc.take() 后 HUD 仍刷新为 背包 1/2
+   [ck] PASS  HUD 已就绪（_ready 已由引擎触发）
+   [ck] PASS  C1：第一次 _try_shift 生效 → T1  (实际=1 / 期望=1)
+   [ck] PASS  C1：HUD 时砂 11 / 12（HUD 并未滞后）  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  C2：★ 第二次 _try_shift 被冷却吞掉（仍停在 T1）  (实际=1 / 期望=1)
+   [ck] PASS  C2：★ 于是 HUD 停在 11/12 —— 表现为『滞后』  (实际=11 / 12 / 期望=11 / 12)
+   [ck] PASS  C3：模拟 _process(0.4) 冷却清零后再切 → T0（真实游戏有帧循环）  (实际=0 / 期望=0)
+   [ck] PASS  C3：HUD 时砂 10 / 12（真实游戏路径下 HUD 不滞后）  (实际=10 / 12 / 期望=10 / 12)
+
+── 用例组：§11 验收清单补证（最短解 / 非色彩通道 / 提示分级）
+   [ck] PASS  最短解 2/7：T1 取崭新钥匙
+   [ck] PASS  最短解 3/7：T1 开铁栅
+   [ck] PASS  最短解 4/7：T1 取砝码
+   [ck] PASS  最短解 5/7：T1 拔藤
+   [ck] PASS  最短解 6/7：T1 砝码上压力板
+   [ck] PASS  ★ §11-1：主动操作数 = 7（切换 T2→T1 → 持取 KEY → 开锁 GATE → 持取 WEIGHT → 拔除 VINE → 放置 WEIGHT → 切换 T1→T2）  (实际=7 / 期望=7)
+   [ck] PASS  ★ §11-1：切换次数 = 2（回到 T2）  (实际=2 / 期望=2)
+   [ck] PASS  ★ §11-1：时砂 12 → 10（耗 2）  (实际=10 / 期望=10)
+   [ck] PASS  §11-1：走到出口 (8,1)  (实际=(8, 1) / 期望=(8, 1))
+   [ck] PASS  ★ §11-1：7 步 / 2 切换后通关
+   [ck] PASS  ★ §11-2：罗马刻度 Ⅰ–Ⅳ 互不相同（通道 1）  (实际=["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ"] / 期望=["Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ"])
+   [ck] PASS  ★ §11-2：光照角度 15/90/300/350 互不相同（通道 2）  (实际=[15.0, 90.0, 300.0, 350.0] / 期望=[15.0, 90.0, 300.0, 350.0])
+   [ck] PASS  ★ §11-2：环境粒子 4 种互不相同（通道 3）  (实际=["SPARK", "DUST", "RUST", "ASH"] / 期望=["SPARK", "DUST", "RUST", "ASH"])
+   [ck] PASS  ★ §11-2：亮度层级 T1 > T0 > T2 > T3（通道 4，实际 [0.78, 1.0, 0.66, 0.5]）
+   [ck] PASS  §11-2：环境音文案 4 种互不相同（通道 5 · 当前无音频实现，仅数据层就绪）  (实际=4 / 期望=4)
+   [ck] PASS  §11-9：配置了 3 级提示  (实际=3 / 期望=3)
+   [ck] PASS  §11-9：三级提示文案与设计稿 §9.3 一致  (实际=["留意钥匙台上那把钥匙。", "这把钥匙，并不是一直都是锈的。", "切到『新光·昼』，取走那把崭新的钥匙。"] / 期望=["留意钥匙台上那把钥匙。", "这把钥匙，并不是一直都是锈的。", "切到『新光·昼』，取走那把崭新的钥匙。"])
+   [ck] PASS  §11-9：提示级别 1/2/3 齐备  (实际=[1, 2, 3] / 期望=[1, 2, 3])
+
+── 用例组：输入映射 / 键位冲突排查
+   [ck] PASS  已注册输入动作：shift_prev
+   [ck] PASS  已注册输入动作：shift_next
+   [ck] PASS  已注册输入动作：take
+   [ck] PASS  已注册输入动作：place
+   [ck] PASS  已注册输入动作：use
+   [ck] PASS  已注册输入动作：observe
+   [ck] PASS  已注册输入动作：undo
+   [ck] PASS  已注册输入动作：hint
+   [ck] PASS  已注册输入动作：reset
+   [ck] PASS  E 键只绑定 use（实际绑定：["use"]）  (实际=["use"] / 期望=["use"])
+   [ck] PASS  A/D 只绑定切时刻  (实际=["shift_next", "shift_prev"] / 期望=["shift_next", "shift_prev"])
+   [ck] PASS  空格只绑定持取  (实际=["take"] / 期望=["take"])
+
+═══════════════════════════════════════════
+[SELFTEST] pass = 291   fails = 4
+  FAIL  [§11.1 放置目标选择专项 P1–P6（不通过 = 质量门不通过）] P2：★ 仍落在 (6,3)（U3 容器格吸附优先于空地）  (实际=(6, 1) / 期望=(6, 3))
+  FAIL  [§11.1 放置目标选择专项 P1–P6（不通过 = 质量门不通过）] P2：plate_pressed(T1) == true
+  FAIL  [§11.1 放置目标选择专项 P1–P6（不通过 = 质量门不通过）] P3：★ 落在 (6,3) 而非 (6,1)（隔离走路，定位 U1 还是 U3）  (实际=(6, 1) / 期望=(6, 3))
+  FAIL  [§11.1 放置目标选择专项 P1–P6（不通过 = 质量门不通过）] P3：plate_pressed(T1) == true
+[SELFTEST] HAS FAILURES
+═══════════════════════════════════════════
